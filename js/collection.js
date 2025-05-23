@@ -7,7 +7,9 @@ export const saveCollection = (cards) => localStorage.setItem('myCollection', JS
 export const renderCollection = () => {
   const { collectionDiv } = elements;
   collectionDiv.innerHTML = '';
-  appendCards(getCollection(), collectionDiv, false);
+  const cards = getCollection();
+  appendCards(cards, collectionDiv, false);
+  updateCollectionStats(cards);
 };
 
 export const exportCollection = () => {
