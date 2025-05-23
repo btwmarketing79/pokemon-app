@@ -1,27 +1,9 @@
-import { renderCollection } from './collection.js';
-import { setupEventListeners } from './events.js';
+import { showCardModal } from './js/ui.js'; 
 
-// DOM references
-const searchInput = document.getElementById('search');
-const resultsDiv = document.getElementById('results');
-const collectionDiv = document.getElementById('collection');
-const loadingDiv = document.getElementById('loading');
-const typeFilter = document.getElementById('typeFilter');
-const sortPrice = document.getElementById('sortPrice');
-const searchError = document.getElementById('searchError');
-const modal = document.getElementById('modal');
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("darkToggle")?.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });
 
-export const elements = {
-  searchInput,
-  resultsDiv,
-  collectionDiv,
-  loadingDiv,
-  typeFilter,
-  sortPrice,
-  searchError,
-  modal
-};
-
-// Initialize app
-renderCollection();
-setupEventListeners();
+  console.log("Main script loaded successfully.");
+});
