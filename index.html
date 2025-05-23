@@ -13,12 +13,29 @@
       <button id="darkToggle">Toggle Dark Mode</button>
       <button id="exportBtn">Export Collection</button>
       <input type="file" id="importFile" />
-      <select id="typeFilter">...</select>
-      <select id="sortPrice">...</select>
+      <select id="typeFilter">
+        <option value="">All Types</option>
+        <option value="Fire">Fire</option>
+        <option value="Water">Water</option>
+        <option value="Grass">Grass</option>
+        <option value="Electric">Electric</option>
+        <option value="Psychic">Psychic</option>
+        <option value="Fighting">Fighting</option>
+        <option value="Darkness">Darkness</option>
+        <option value="Metal">Metal</option>
+        <option value="Fairy">Fairy</option>
+        <option value="Dragon">Dragon</option>
+        <option value="Colorless">Colorless</option>
+      </select>
+      <select id="sortPrice">
+        <option value="">Sort by</option>
+        <option value="asc">Price: Low to High</option>
+        <option value="desc">Price: High to Low</option>
+      </select>
     </div>
   </div>
   <input type="text" id="search" placeholder="Search for a card... (e.g., Pikachu)" />
-  <div id="searchError" class="error" style="display: none;">Please enter at least 3 characters to search.</div>
+  <div id="searchError" class="error" style="display: none;"></div>
   <div id="loading">Loading cards...</div>
   <div class="card-list" id="results"></div>
   <hr style="margin: 2rem 0; border: none; border-top: 2px solid #ccc;" />

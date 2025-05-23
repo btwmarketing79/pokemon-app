@@ -1,44 +1,36 @@
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  margin: 0;
-  padding: 2rem;
+#darkToggle.toggle-active {
+  background-color: #000;
+  color: #0f0;
+  border: 2px solid #0f0;
 }
-
-h1, h2 {
-  color: #2c3e50;
+body { font-family: sans-serif; margin: 2rem; background: #f8f8fc; transition: background 0.3s, color 0.3s; }
+h1, h2 { color: #ef5350; }
+#search { width: 100%; padding: 0.5rem; font-size: 1.1rem; }
+.card-list, .collection { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+.card { background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 0.5rem; width: 150px; text-align: center; position: relative; }
+.card img { max-width: 100%; border-radius: 8px; cursor: pointer; }
+button { margin-top: 0.5rem; background: #ef5350; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 5px; cursor: pointer; }
+button:hover { background: #d32f2f; }
+#loading { display: none; font-style: italic; margin-top: 1rem; color: gray; }
+.remove-btn { position: absolute; top: 5px; right: 5px; font-size: 0.8rem; background: #ccc; color: black; padding: 2px 4px; border-radius: 4px; }
+.remove-btn:hover { background: #aaa; }
+.dark { background: #121212; color: #e0e0e0; }
+.dark h1, .dark h2 { color: #ff6b6b; }
+.dark .card { background: #1e1e1e; color: #fff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+.dark button { background: #333; color: #fff; }
+.dark button:hover { background: #444; }
+.dark .remove-btn { background: #666; color: white; }
+.dark .remove-btn:hover { background: #999; }
+.dark #modal { background: #2c2c2c; color: white; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+button.toggle-active { background: #444 !important; color: #fff !important; }
+.error { color: red; margin-top: 0.5rem; }
+@media (max-width: 768px) {
+  body { margin: 1rem; }
+  .card-list, .collection { justify-content: center; }
+  .card { width: 45%; }
+  button, input[type="text"], input[type="file"], select { width: 100%; margin: 0.5rem 0; }
+  h1, h2 { text-align: center; }
 }
-
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  background-color: #4CAF50;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-input, select {
-  padding: 0.4rem;
-  margin: 0.4rem;
-}
-
-.card-list, .collection {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.card-list > div, .collection > div {
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 8px;
-  background-color: white;
+@media (max-width: 480px) {
+  .card { width: 100%; }
 }
