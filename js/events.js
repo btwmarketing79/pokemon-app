@@ -39,7 +39,7 @@ export const setupEventListeners = () => {
   });
 
   document.getElementById('importFile').addEventListener('change', importCollection);
-  document.querySelector('button[onclick="exportCollection()"]').addEventListener('click', exportCollection);
+  document.getElementById('exportBtn').addEventListener('click', exportCollection);
 
   setupModalListeners();
 };
