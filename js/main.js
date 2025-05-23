@@ -1,5 +1,5 @@
-// force update
-import { showCardModal } from './ui.js';
+import { setupEventListeners } from './events.js';
+import { renderCollection } from './collection.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const darkPreference = localStorage.getItem("darkMode");
@@ -7,9 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("dark");
     document.getElementById("darkToggle")?.classList.add("toggle-active");
   }
-  document.getElementById("darkToggle")?.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-  });
 
-  console.log("Main script loaded successfully.");
+  setupEventListeners();
+  renderCollection();
+  console.log("Main script loaded and event listeners set.");
 });
