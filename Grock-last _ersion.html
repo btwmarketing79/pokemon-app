@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Card Tracker</title>
+  <style>
+    #darkToggle.toggle-active {
+      background-color: #000;
+      color: #0f0;
+      border: 2px solid #0f0;
+    }
+
+    body { font-family: sans-serif; margin: 2rem; background: #f8f8fc; transition: background 0.3s, color 0.3s; }
+    h1, h2 { color: #ef5350; }
+    #search { width: 100%; padding: 0.5rem; font-size: 1.1rem; }
+    .card-list, .collection { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+    .card { background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 0.5rem; width: 150px; text-align: center; position: relative; }
+    .card img { max-width: 100%; border-radius: 8px; cursor: pointer; }
+    button { margin-top: 0.5rem; background: #ef5350; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #d32f2f; }
+    #loading { display: none; font-style: italic; margin-top: 1rem; color: gray; }
+    .remove-btn { position: absolute; top: 5px; right: 5px; font-size: 0.8rem; background: #ccc; color: black; padding: 2px 4px; border-radius: 4px; }
+    .remove-btn:hover { background: #aaa; }
+    .dark { background: #121212; color: #e0e0e0; }
+    .dark h1, .dark h2 { color: #ff6b6b; }
+    .dark .card { background: #1e1e1e; color: #fff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+    .dark button { background: #333; color: #fff; }
+    .dark button:hover { background: #444; }
+    .dark .remove-btn { background: #666; color: white; }
+    .dark .remove-btn:hover { background: #999; }
+    .dark #modal { background: #2c2c2c; color: white; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+    button.toggle-active { background: #444 !important; color: #fff !important; }
+    .error { color: red; margin-top: 0.5rem; } /* Added for error messages */
+    @media (max-width: 768px) {
+      body { margin: 1rem; }
+      .card-list, .collection { justify-content: center; }
+      .card { width: 45%; }
+      button, input[type="text"], input[type="file"], select { width: 100%; margin: 0.5rem 0; }
+      h1, h2 { text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .card { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <h1>Pokémon Card Tracker</h1>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+      <button id="darkToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+      <button onclick="exportCollection()">Export Collection</button>
+      <input type="file" id="importFile" />
+      <select id="typeFilter">
+        <option value="">All Types</option>
+        <option value="Fire">Fire</option>
+        <option value="Water">Water</option>
+        <option value="Grass">Grass</option>
+        <option value="Electric">Electric</option>
+        <option value="Psychic">Psychic</option>
+        <option value="Fighting">Fighting</option>
+        <option value="Darkness">Darkness</option>
+        <option value="Metal">Metal</option>
+        <option value="Fairy">Fairy</option>
+        <option value="Dragon">Dragon</option>
+        <option value="Colorless">Colorless</option>
+      </select>
+      <select id="sortPrice">
+        <option value="">Sort by</option>
+        <option value="asc">Price: Low to High</option>
+        <option value="desc">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  <input type="text" id="search" placeholder="Search for a card... (e.g., Pikachu)" />
+  <div id="searchError" class="error" style="display: none;">Please enter at least 3 characters to search.</div> <!-- Added for search feedback -->
+  <div id="loading">Loading cards...</div>
+  <div class="card-list" id="results"></div>
+  <hr style="margin: 2rem 0; border: none; border-top: 2px solid #ccc;" />
+  <h2>My Collection</h2>
+  <div class="collection" id="collection"></div>
+
+  <div id="modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:white; padding:1rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); max-width:90%; z-index:1000;" role="dialog" aria-label="Card Details">
+    <div id="modalContent"></div>
+    <button onclick="modal.style.display='none'">Close</button>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('search');
+    const resultsDiv = document.getElementById('results');
+    const collectionDiv = document.getElementById('collection');
+    const loadingDiv = document.getElementById('loading');
+    const typeFilter = document.getElementById('typeFilter');
+    const sortPrice = document.getElementById('sortPrice');
+    const searchError = document.getElementById('searchError'); // Added for search feedback
+    const modal = document.getElementById('modal'); // Added for modal accessibility
+    const getCollection = () => JSON.parse(localStorage.getItem('myCollection') || '[]');
+    const saveCollection = (cards) => localStorage.setItem('myCollection', JSON.stringify(cards));
+    const getMarketPrice = (card) => {
+      const prices = card.tcgplayer?.prices || {};
+      return prices.normal?.market || prices.holofoil?.market || prices.reverseHolofoil?.market || prices['1stEditionHolofoil']?.market || null;
+    };
+
+    const appendCards = (cards, container, showAdd = true) => {
+      const sortOrder = sortPrice.value;
+      if (sortOrder === 'asc') {
+        cards.sort((a, b) => {
+          const priceA = getMarketPrice(a) ?? Infinity; // Handle null prices
+          const priceB = getMarketPrice(b) ?? Infinity;
+          return priceA - priceB;
+        });
+      } else if (sortOrder === 'desc') {
+        cards.sort((a, b) => {
+          const priceA = getMarketPrice(a) ?? -Infinity;
+          const priceB = getMarketPrice(b) ?? -Infinity;
+          return priceB - priceA;
+        });
+      } else {
+        cards.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      cards.forEach(card => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <img src="${card.images.small}" alt="${card.name}" loading="lazy" /> <!-- Added lazy loading -->
+          <div>${card.name}</div>
+          <div style="font-size: 0.9rem; color: gray;">${(getMarketPrice(card)?.toFixed(2) && '$' + getMarketPrice(card).toFixed(2)) || 'N/A'}</div>
+          ${showAdd ? `<button data-id="${card.id}">Add</button>` : `<button class='remove-btn' data-id="${card.id}">✕</button>`}
+        `;
+        div.querySelector('img').addEventListener('click', () => showModal(card));
+        container.appendChild(div);
+
+        if (!showAdd) {
+          div.querySelector('.remove-btn').addEventListener('click', () => {
+            let existing = getCollection().filter(c => c.id !== card.id);
+            saveCollection(existing);
+            renderCollection();
+          });
+        } else {
+          div.querySelector('button').addEventListener('click', () => {
+            const existing = getCollection();
+            if (!existing.find(c => c.id === card.id)) {
+              existing.push(card);
+              saveCollection(existing);
+              renderCollection();
+            }
+          });
+        }
+      });
+    };
+
+    const showModal = (card) => {
+      const content = document.getElementById('modalContent');
+      modal.style.display = 'block';
+      modal.setAttribute('aria-label', `Details for ${card.name}`); // Accessibility
+      content.innerHTML = `
+        <h3>${card.name}</h3>
+        <img src="${card.images.large}" style="max-width:100%" loading="lazy" alt="${card.name}" /> <!-- Added lazy loading -->
+        <p><strong>Set:</strong> ${card.set.name}</p>
+        <p><strong>Rarity:</strong> ${card.rarity || 'N/A'}</p>
+        <p><strong>HP:</strong> ${card.hp || 'N/A'}</p>
+        <p><strong>Types:</strong> ${(card.types || []).join(', ')}</p>
+        <p><strong>Market Price:</strong> ${(getMarketPrice(card)?.toFixed(2) && '$' + getMarketPrice(card).toFixed(2)) || 'N/A'}</p>
+      `;
+    };
+
+    // Added modal accessibility: close on outside click or Esc
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') modal.style.display = 'none';
+    });
+
+    const renderCollection = () => {
+      collectionDiv.innerHTML = '';
+      appendCards(getCollection(), collectionDiv, false);
+    };
+
+    let currentPage = 1;
+    let currentQuery = '';
+    let loadMoreBtn;
+
+    const loadCards = async (query) => {
+      try {
+        const type = typeFilter.value;
+        let parts = [];
+        if (query) parts.push(`name:${encodeURIComponent(query)}`); // Sanitize query
+        if (type) parts.push(`types:${type}`);
+        const fullQuery = parts.join('+');
+        const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=${fullQuery}&pageSize=20&page=${currentPage}&select=id,name,images,set,rarity,hp,types,supertype,tcgplayer`, {
+          headers: {
+            'X-Api-Key': 'YOUR_API_KEY' // Replace with actual API key from https://dev.pokemontcg.io/
+          }
+        });
+        if (!res.ok) throw new Error(res.status === 429 ? 'Rate limit exceeded. Please try again later.' : 'Failed to fetch cards');
+        const data = await res.json();
+        appendCards(data.data, resultsDiv, true);
+        loadingDiv.style.display = 'none';
+
+        if (data.data.length === 20) {
+          if (!loadMoreBtn || !document.body.contains(loadMoreBtn)) {
+            loadMoreBtn = document.createElement('button');
+            loadMoreBtn.textContent = 'Load More';
+            loadMoreBtn.style.marginTop = '1rem';
+            resultsDiv.parentNode.appendChild(loadMoreBtn);
+            loadMoreBtn.onclick = () => {
+              currentPage++;
+              loadCards(currentQuery);
+            };
+          }
+        } else if (loadMoreBtn) {
+          loadMoreBtn.remove();
+          loadMoreBtn = null; // Reset to avoid stale references
+        }
+      } catch (error) {
+        loadingDiv.style.display = 'none';
+        resultsDiv.innerHTML = `<p class="error">${error.message}</p>`;
+        console.error(error);
+      }
+    };
+
+    const toggleDarkMode = () => {
+      document.body.classList.toggle('dark');
+      document.getElementById('darkToggle').classList.toggle('toggle-active');
+    };
+
+    const exportCollection = () => {
+      const blob = new Blob([JSON.stringify(getCollection())], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "pokemon_collection.json";
+      a.click();
+      URL.revokeObjectURL(url); // Clean up
+    };
+
+    document.getElementById('importFile').addEventListener('change', function(e) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const data = JSON.parse(event.target.result);
+          // Remove duplicates by id
+          const uniqueData = Array.from(new Map(data.map(card => [card.id, card])).values());
+          saveCollection(uniqueData);
+          renderCollection();
+        } catch (e) {
+          alert("Import failed: invalid file.");
+        }
+      };
+      reader.readAsText(e.target.files[0]);
+    });
+
+    searchInput.addEventListener('keyup', () => {
+      clearTimeout(window.debounceTimer);
+      currentQuery = searchInput.value.trim();
+      searchError.style.display = currentQuery.length < 3 ? 'block' : 'none'; // Show error if input is too short
+      if (currentQuery.length < 3) return;
+      window.debounceTimer = setTimeout(() => {
+        currentPage = 1;
+        resultsDiv.innerHTML = '';
+        if (loadMoreBtn) {
+          loadMoreBtn.remove();
+          loadMoreBtn = null; // Reset to avoid stale references
+        }
+        loadingDiv.style.display = 'block';
+        loadCards(currentQuery);
+      }, 500);
+    });
+
+    typeFilter.addEventListener('change', () => {
+      currentPage = 1;
+      resultsDiv.innerHTML = '';
+      if (loadMoreBtn) {
+        loadMoreBtn.remove();
+        loadMoreBtn = null; // Reset to avoid stale references
+      }
+      loadingDiv.style.display = 'block';
+      loadCards(currentQuery);
+    });
+
+    sortPrice.addEventListener('change', () => {
+      currentPage = 1;
+      resultsDiv.innerHTML = '';
+      if (loadMoreBtn) {
+        loadMoreBtn.remove();
+        loadMoreBtn = null; // Reset to avoid stale references
+      }
+      loadingDiv.style.display = 'block';
+      loadCards(currentQuery);
+    });
+
+    renderCollection();
+  </script>
+</body>
+</html>

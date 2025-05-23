@@ -1,0 +1,12 @@
+pokemon-card-tracker/
+├── index.html           # Main HTML file
+├── styles.css           # All CSS styles
+├── js/
+│   ├── main.js          # Entry point for JavaScript
+│   ├── api.js           # Handles API requests
+│   ├── collection.js    # Manages the card collection (localStorage)
+│   ├── ui.js            # Handles DOM manipulation and rendering
+│   ├── modal.js         # Manages the modal functionality
+│   ├── events.js        # Handles event listeners
+│   ├── utils.js         # Utility functions (e.g., price sorting)
+└── assets/              # (Optional) For images or other static assets

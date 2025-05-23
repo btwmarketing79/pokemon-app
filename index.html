@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Card Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <h1>Pokémon Card Tracker</h1>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+      <button id="darkToggle">Toggle Dark Mode</button>
+      <button id="exportBtn">Export Collection</button>
+      <input type="file" id="importFile" />
+      <select id="typeFilter">...</select>
+      <select id="sortPrice">...</select>
+    </div>
+  </div>
+  <input type="text" id="search" placeholder="Search for a card... (e.g., Pikachu)" />
+  <div id="searchError" class="error" style="display: none;">Please enter at least 3 characters to search.</div>
+  <div id="loading">Loading cards...</div>
+  <div class="card-list" id="results"></div>
+  <hr style="margin: 2rem 0; border: none; border-top: 2px solid #ccc;" />
+  <h2>My Collection</h2>
+  <div class="collection" id="collection"></div>
+  <div id="modal" style="display:none; ..." role="dialog" aria-label="Card Details">
+    <div id="modalContent"></div>
+    <button onclick="document.getElementById('modal').style.display='none'">Close</button>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
