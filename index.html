@@ -1,50 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pokémon Card Tracker</title>
-  <link rel="stylesheet" href="./css/styles.css" />
-</head>
-<body>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Pokémon Card Tracker
+  </title>
+ </head>
+ <body>
   <div style="text-align: center; margin-bottom: 1rem;">
-    <h1>Pokémon Card Tracker</h1>
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
-      <button id="darkToggle">Toggle Dark Mode</button>
-      <button id="exportBtn">Export Collection</button>
-      <input type="file" id="importFile" />
-      <select id="typeFilter">
-        <option value="">All Types</option>
-        <option value="Fire">Fire</option>
-        <option value="Water">Water</option>
-        <option value="Grass">Grass</option>
-        <option value="Electric">Electric</option>
-        <option value="Psychic">Psychic</option>
-        <option value="Fighting">Fighting</option>
-        <option value="Darkness">Darkness</option>
-        <option value="Metal">Metal</option>
-        <option value="Fairy">Fairy</option>
-        <option value="Dragon">Dragon</option>
-        <option value="Colorless">Colorless</option>
-      </select>
-      <select id="sortPrice">
-        <option value="">Sort by</option>
-        <option value="asc">Price: Low to High</option>
-        <option value="desc">Price: High to Low</option>
-      </select>
-    </div>
+   <h1>
+    Pokémon Card Tracker
+   </h1>
+   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+    <button id="darkToggle" onclick="toggleDarkMode()">
+     Toggle Dark Mode
+    </button>
+    <button onclick="exportCollection()">
+     Export Collection
+    </button>
+    <input id="importFile" type="file"/>
+    <select id="typeFilter">
+     <option value="">
+      All Types
+     </option>
+     <option value="Fire">
+      Fire
+     </option>
+     <option value="Water">
+      Water
+     </option>
+     <option value="Grass">
+      Grass
+     </option>
+     <option value="Electric">
+      Electric
+     </option>
+     <option value="Psychic">
+      Psychic
+     </option>
+     <option value="Fighting">
+      Fighting
+     </option>
+     <option value="Darkness">
+      Darkness
+     </option>
+     <option value="Metal">
+      Metal
+     </option>
+     <option value="Fairy">
+      Fairy
+     </option>
+     <option value="Dragon">
+      Dragon
+     </option>
+     <option value="Colorless">
+      Colorless
+     </option>
+    </select>
+    <select id="sortPrice">
+     <option value="">
+      Sort by
+     </option>
+     <option value="asc">
+      Price: Low to High
+     </option>
+     <option value="desc">
+      Price: High to Low
+     </option>
+    </select>
+   </div>
   </div>
-  <input type="text" id="search" placeholder="Search for a card... (e.g., Pikachu)" />
-  <div id="searchError" class="error" style="display: none;"></div>
-  <div id="loading">Loading cards...</div>
-  <div class="card-list" id="results"></div>
-  <hr style="margin: 2rem 0; border: none; border-top: 2px solid #ccc;" />
-  <h2>My Collection</h2>
-  <div class="collection" id="collection"></div>
-  <div id="modal" style="display:none;" role="dialog" aria-label="Card Details">
-    <div id="modalContent"></div>
-    <button onclick="document.getElementById('modal').style.display='none'">Close</button>
+  <input id="search" placeholder="Search for a card... (e.g., Pikachu)" type="text"/>
+  <div id="loading">
+   Loading cards...
   </div>
-  <script type="module" src="./js/main.js"></script>
-</body>
+  <div class="card-list" id="results">
+  </div>
+  <hr style="margin: 2rem 0; border: none; border-top: 2px solid #ccc;"/>
+  <h2>
+   My Collection
+  </h2>
+  <div class="collection" id="collection">
+  </div>
+  <div id="modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:white; padding:1rem; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); max-width:90%; z-index:1000;">
+   <div id="modalContent">
+   </div>
+   <button onclick="modal.style.display='none'">
+    Close
+   </button>
+  </div>
+ </body>
 </html>
