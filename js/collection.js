@@ -1,8 +1,11 @@
-import { getCollection } from './collection.js';
 import { getMarketPrice } from './utils.js';
 import { appendCards } from './ui.js';
 
 const collectionDiv = document.getElementById("collection");
+
+function getCollection() {
+  return JSON.parse(localStorage.getItem("myCollection") || "[]");
+}
 
 function updateCollectionStats(cards) {
   const total = cards.length;
