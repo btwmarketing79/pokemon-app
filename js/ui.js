@@ -1,7 +1,26 @@
 export function showCardModal(card) {
   const modal = document.getElementById("modal");
   const content = document.getElementById("modalContent");
-  content.innerHTML = `<h3>${card.name}</h3><img src="${card.imageUrl}" alt="${card.name}"/>`;
+
+  const imageUrl = card?.images?.large || card?.images?.small || '';
+  const set = card?.set?.name || 'N/A';
+  const rarity = card?.rarity || 'N/A';
+  const hp = card?.hp || 'N/A';
+  const types = (card?.types || []).join(', ') || 'N/A';
+  const price = getMarketPrice(card);
+
+  content.innerHTML = `
+    <h3>${card.name || 'Unnamed Card'}</h3>
+    <img src="${imageUrl}" style="max-width:100%" loading="lazy" alt="${card.name || 'Card'}" />
+    <p><strong>Set:</strong> ${set}</p>
+    <p><strong>Rarity:</strong> ${rarity}</p>
+    <p><strong>HP:</strong> ${hp}</p>
+    <p><strong>Types:</strong> ${types}</p>
+    <p><strong>Market Price:</strong> ${price ? '$' + price.toFixed(2) : 'N/A'}</p>
+  `;
+
+  modal.style.display = "block";
+}</h3><img src="${card.imageUrl}" alt="${card.name}"/>`;
   modal.style.display = "block";
 }
 
@@ -25,9 +44,7 @@ export function appendCards(cards, container, showAdd = true) {
         : `<button class="remove-btn" data-id="${card.id}">✕</button>`}
     `;
 
-    div.querySelector("img").addEventListener("click", () => showCardModal(card));
-
-  const button = div.querySelector("button");
+    const button = div.querySelector("button");
 
     if (showAdd) {
       button.addEventListener("click", () => {
