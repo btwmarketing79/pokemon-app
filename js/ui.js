@@ -1,8 +1,19 @@
-import { getMarketPrice } from './utils.js';
 export function showCardModal(card) {
   const modal = document.getElementById("modal");
   const content = document.getElementById("modalContent");
-  content.innerHTML = `<h3>${card.name}</h3><img src="${card.imageUrl}" alt="${card.name}"/>`;
+
+  content.innerHTML = `
+    <h3>${card.name}</h3>
+    <img src="${card.images?.large || card.images?.small}" style="max-width:100%" loading="lazy" alt="${card.name}" />
+    <p><strong>Set:</strong> ${card.set?.name || 'N/A'}</p>
+    <p><strong>Rarity:</strong> ${card.rarity || 'N/A'}</p>
+    <p><strong>HP:</strong> ${card.hp || 'N/A'}</p>
+    <p><strong>Types:</strong> ${(card.types || []).join(', ') || 'N/A'}</p>
+    <p><strong>Market Price:</strong> $${getMarketPrice(card).toFixed(2)}</p>
+  `;
+
+  modal.style.display = "block";
+}</h3><img src="${card.imageUrl}" alt="${card.name}"/>`;
   modal.style.display = "block";
 }
 
@@ -47,7 +58,6 @@ export function appendCards(cards, container, showAdd = true) {
       });
     }
 
-        div.querySelector("img").addEventListener("click", () => showCardModal(card));
     container.appendChild(div);
   });
 }
