@@ -25,3 +25,29 @@ export function renderCollection() {
   appendCards(cards, collectionDiv, false);
   updateCollectionStats(cards);
 }
+
+export function exportCollection() {
+  const collection = getCollection();
+  const blob = new Blob([JSON.stringify(collection)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "pokemon_collection.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function importCollection(event) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      const unique = Array.from(new Map(data.map(card => [card.id, card])).values());
+      localStorage.setItem("myCollection", JSON.stringify(unique));
+      renderCollection();
+    } catch {
+      alert("Import failed: invalid file.");
+    }
+  };
+  reader.readAsText(event.target.files[0]);
+}
