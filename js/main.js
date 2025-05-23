@@ -1,9 +1,8 @@
-import { showCardModal } from './ui.js';
+import { setupEventListeners } from './events.js';
+import { renderCollection } from './collection.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("darkToggle")?.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-  });
-
+  setupEventListeners();            // ✅ THIS LINE WAS MISSING
+  renderCollection();               // ✅ Shows saved cards
   console.log("Main script loaded successfully.");
 });
