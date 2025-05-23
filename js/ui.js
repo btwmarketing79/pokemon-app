@@ -1,4 +1,4 @@
-import { getMarketPrice, getCollection, saveCollection, renderCollection } from './collection.js';
+import { getCollection, saveCollection, renderCollection } from './collection.js';
 import { showModal } from './modal.js';
 import { getMarketPrice } from './utils.js';
 
