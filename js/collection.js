@@ -1,5 +1,5 @@
 import { appendCards } from './ui.js';
-import { elements } from './main.js';
+import { elements } from './elements.js';
 
 export const getCollection = () => JSON.parse(localStorage.getItem('myCollection') || '[]');
 export const saveCollection = (cards) => localStorage.setItem('myCollection', JSON.stringify(cards));

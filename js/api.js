@@ -1,5 +1,5 @@
 // Force Update
-import { elements } from './main.js';
+import { elements } from './elements.js';
 import { appendCards } from './ui.js';
 
 let currentPage = 1;
