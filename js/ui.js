@@ -1,3 +1,4 @@
+import { getMarketPrice } from './utils.js';
 export function showCardModal(card) {
   const modal = document.getElementById("modal");
   const content = document.getElementById("modalContent");
@@ -46,6 +47,7 @@ export function appendCards(cards, container, showAdd = true) {
       });
     }
 
+        div.querySelector("img").addEventListener("click", () => showCardModal(card));
     container.appendChild(div);
   });
 }
