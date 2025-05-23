@@ -9,6 +9,14 @@ export const getMarketPrice = (card) => {
   );
 };
   return (
+    prices.normal?.market ??
+    prices.holofoil?.market ??
+    prices.reverseHolofoil?.market ??
+    prices['1stEditionHolofoil']?.market ??
+    0
+  );
+};
+  return (
     prices.normal?.market ||
     prices.holofoil?.market ||
     prices.reverseHolofoil?.market ||
