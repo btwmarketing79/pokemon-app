@@ -1,4 +1,4 @@
-import { elements } from './elements.js';
+import { elements } from './main.js';
 import { loadCards, setCurrentQuery } from './api.js';
 import { exportCollection, importCollection } from './collection.js';
 import { setupModalListeners } from './modal.js';
@@ -33,7 +33,9 @@ export const setupEventListeners = () => {
 
   document.getElementById('darkToggle').addEventListener('click', () => {
     document.body.classList.toggle('dark');
-    document.getElementById('darkToggle').classList.toggle('toggle-active');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark ? 'on' : 'off');
+    document.getElementById('darkToggle').classList.toggle('toggle-active', isDark);
   });
 
   document.getElementById('importFile').addEventListener('change', importCollection);
