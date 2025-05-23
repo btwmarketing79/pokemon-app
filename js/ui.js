@@ -1,5 +1,6 @@
 import { getMarketPrice, getCollection, saveCollection, renderCollection } from './collection.js';
 import { showModal } from './modal.js';
+import { getMarketPrice } from './utils.js';
 
 export function appendCards(cards, container, showAdd = true) {
   const sortPrice = document.getElementById('sortPrice');
