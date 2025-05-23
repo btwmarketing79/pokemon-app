@@ -1,6 +1,4 @@
-import { loadCards } from './js/api.js';
-import { setupEventListeners } from './js/events.js';
-import { renderCollection } from './js/collection.js';
+import { showCardModal } from './ui.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("darkToggle")?.addEventListener("click", () => {
