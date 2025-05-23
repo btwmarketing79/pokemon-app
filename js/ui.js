@@ -20,8 +20,6 @@ export function showCardModal(card) {
   `;
 
   modal.style.display = "block";
-}</h3><img src="${card.imageUrl}" alt="${card.name}"/>`;
-  modal.style.display = "block";
 }
 
 export function appendCards(cards, container, showAdd = true) {
