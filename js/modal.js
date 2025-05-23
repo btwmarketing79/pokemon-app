@@ -1,4 +1,4 @@
-import { getMarketPrice } from './utils.js';
+import { getMarketPrice } from './ui.js';
 
 export const showModal = (card) => {
   const modal = document.getElementById('modal');

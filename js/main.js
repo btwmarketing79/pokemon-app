@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("dark");
     document.getElementById("darkToggle")?.classList.add("toggle-active");
   }
-
   document.getElementById("darkToggle")?.addEventListener("click", () => {
     document.body.classList.toggle("dark");
   });
