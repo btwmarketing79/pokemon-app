@@ -15,7 +15,7 @@ export const loadCards = async (query) => {
     const fullQuery = parts.join('+');
     const res = await fetch(
       `https://api.pokemontcg.io/v2/cards?q=${fullQuery}&pageSize=20&page=${currentPage}&select=id,name,images,set,rarity,hp,types,supertype,tcgplayer`,
-      { headers: { 'X-Api-Key': 'YOUR_API_KEY' } }
+      { headers: { 'X-Api-Key': 'd1be42b3-fd7b-45b5-a9c5-843698853457' } }
     );
     if (!res.ok) throw new Error(res.status === 429 ? 'Rate limit exceeded.' : 'Failed to fetch cards');
     const data = await res.json();
