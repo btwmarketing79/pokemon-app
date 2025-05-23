@@ -1,4 +1,4 @@
-import { elements } from './main.js';
+import { elements } from './elements.js';
 import { loadCards, setCurrentQuery } from './api.js';
 import { exportCollection, importCollection } from './collection.js';
 import { setupModalListeners } from './modal.js';
